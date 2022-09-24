@@ -1,0 +1,74 @@
+
+Install Docker Engine on CentOS
+-	Sudo yum remove docker \docker-client \ docker-client-latest \ docker-common \ docker-latest \ docker-latest-logrotate \ docker-logrotate \ docker-engine
+-	sudo yum install -y yum-utils
+ 
+-	sudo yum-config-manager  --add-repo \ https://download.docker.com/linux/centos/docker-ce.repo
+ 
+-	sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin --allowerasing
+ 
+-	sudo systemctl start docker
+-	sudo docker run hello-world
+
+aac platform docker container image creation
+-	vim Dockerfile
+ 
+-	vim requirements-dev.txt
+ 
+-	docker build -t jiarchenlinux/run:v1  .
+ 
+
+
+aac-tool docker container image creation
+
+On VM
+-	python3 -m pip install –user pipx
+ 
+
+-	python3 -m pipx ensurepath
+ 
+
+Local PC/MAC
+
+-	https://containers.cisco.com/repository/aide/aac-tool
+docker pull containers.cisco.com/aide/aac-tool 
+
+ 
+-	docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage \
+         -sV=1.36 containers.cisco.com/aide/aac-tool:latest
+ 
+-	docker save containers.cisco.com/aide/aac-tool:latest > aac-tool20220901.tar
+-	sudo tar -zcvf aac-tool20220901.tar.gz aac-tool20220901.tar
+
+Upload through Git LFS and download the file to VM
+1.	Create a repo on GitHub.
+2.	Download Git LFS at https://git-lfs.github.com/ 
+3.	Copy file to a local directory, like: /Users/jiarchen/Downloads/ctbc2/.git/
+ 
+4.	Git init – follow GitHub repo guide, like:
+git add README.md
+git remote add origin https://github.com/jiarchen12/CTBC.git
+git branch -M main
+5.	Git LFS upload:
+git lfs install
+git lfs track "*.gz"
+git add .gitattributes
+git add aac-tool20220901.tar.gz
+git commit -m "Add design file"
+git push origin main
+6.	Check file upload status from GitHub
+ 
+
+Back on VM
+-	Yum install git-lfs
+ 
+-	Git lfs clone https://github.com/jiarchen12/CTBC.git
+ 
+-	Tar -zxvf aac-tool20220901.tar.gz
+-	Docker load -I aac-tool20220901.tar
+ 
+-	Docker images
+ 
+-	docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage \
+         -sV=1.36 containers.cisco.com/aide/aac-tool:latest
+ 
